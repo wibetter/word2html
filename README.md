@@ -1,6 +1,7 @@
 
 
 # word2html: word文档转html工具
+### 注：只处理后缀为'.docx'的word文档。
 
 ## 使用方法1
 
