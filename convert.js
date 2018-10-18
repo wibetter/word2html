@@ -14,9 +14,9 @@ const suceessTip = function(msg) {
 };
 
 // 根据文档内容创建html页面
-const createHtml = function (document, fileName, fileRemote, htmlTitle) {
-  let newFileDir = path.resolve(process.cwd(), 'html'); // 编写第三方插件的时候尽量不使用 __dirname
-  newFileDir = path.resolve(newFileDir, './' + fileRemote); // 兼容性写好，同时接收用户输入的'D:/test'和'D:/test/'格式
+const createHtml = function (document, fileName, fileRemote, config) {
+  const htmlTitle = config.title;
+  let newFileDir = path.resolve(config.dist, './' + fileRemote); // 兼容性写好，同时接收用户输入的'D:/test'和'D:/test/'格式
   fs.exists(newFileDir, function(exists) {
     if (!exists) {
       fs.mkdir(newFileDir, function(){
@@ -47,8 +47,8 @@ const convert = function (configs) {
   if (configs.local) {
     console.log("先清空html文件夹。。。");
 
-    const htmlDir = path.resolve(process.cwd(), 'html');
-    del([htmlDir + '/**'], {
+    const htmlDir = configs.dist;
+    del([htmlDir], {
       force: true
     }).then(() => {
       suceessTip(htmlDir + '目录文件已清空');
@@ -73,7 +73,7 @@ const convert = function (configs) {
           mammoth.convertToHtml({path: item })
             .then(function(result){
               var htmlDocument = result.value; // The generated HTML
-              createHtml(htmlDocument, fileName, fileRemote, configs.title);
+              createHtml(htmlDocument, fileName, fileRemote, configs);
             })
             .done();
         });
@@ -87,6 +87,7 @@ module.exports = function (configs) {
 
   // pc 斜杆处理
   configs.local = configs.local.replace(/\\/g, '/');
+  configs.dist = configs.dist.replace(/\\/g, '/');
 
   convert(configs);
 }

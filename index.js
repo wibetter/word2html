@@ -25,8 +25,13 @@ let argv = yargs
       .usage(titleTip('Usage')+': $0 convert [options]')
       .option('local',{
         alias: 'l',
-        describe: '本地文件夹或文件的绝对地址',
+        describe: '存放word的文件夹绝对地址',
         default: path.resolve(process.cwd(), 'word'),
+      })
+      .option('dist',{
+        alias: 'd',
+        describe: '存放html的文件夹绝对地址',
+        default: path.resolve(process.cwd(), 'html'),
       })
       .option('title',{
         alias: 'tit',

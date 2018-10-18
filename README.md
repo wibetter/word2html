@@ -36,6 +36,10 @@ word2html convert --local=D:\sinaweb\word2html\word
 word2html convert --local=D:\sinaweb\word2html\word --title=wibetter的页面
 ```
 
+# 设置html页面存放的位置
+word2html convert --dist D:\mywork\word2html\html
+```
+
 
 ## 使用方法2
 
@@ -58,5 +62,7 @@ word2html('D:/sinaweb/word2html/word');
 # 设置html页面的Title
 word2html('D:/sinaweb/word2html/word', 'wibetter');
 
+# 设置html页面存放的位置
+word2html('D:/sinaweb/word2html/word', 'wibetter', 'D:/mywork/word2html/html');
 ```
 
