@@ -14,7 +14,7 @@ const suceessTip = function(msg) {
 };
 
 // 根据文档内容创建html页面
-const createHtml = function (document, fileName, fileRemote) {
+const createHtml = function (document, fileName, fileRemote, htmlTitle) {
   let newFileDir = path.resolve(process.cwd(), 'html'); // 编写第三方插件的时候尽量不使用 __dirname
   newFileDir = path.resolve(newFileDir, './' + fileRemote); // 兼容性写好，同时接收用户输入的'D:/test'和'D:/test/'格式
   fs.exists(newFileDir, function(exists) {
@@ -30,7 +30,8 @@ const createHtml = function (document, fileName, fileRemote) {
   const htmlTemplatePath = path.resolve(__dirname, 'template', 'common.html');
   fs.readFile(htmlTemplatePath, 'utf8', function(err, htmlTemplate){
 
-    let newDocument = htmlTemplate.replace(/#bodyDocument/g, document);
+    let newDocument = htmlTemplate.replace(/#bodyDocument/g, document)
+      .replace(/#documentTitle/g, htmlTitle);
 
     fs.writeFile(filePath, newDocument, (err) => {
       if (err) {
@@ -72,7 +73,7 @@ const convert = function (configs) {
           mammoth.convertToHtml({path: item })
             .then(function(result){
               var htmlDocument = result.value; // The generated HTML
-              createHtml(htmlDocument, fileName, fileRemote);
+              createHtml(htmlDocument, fileName, fileRemote, configs.title);
             })
             .done();
         });

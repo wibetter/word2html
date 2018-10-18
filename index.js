@@ -28,6 +28,11 @@ let argv = yargs
         describe: '本地文件夹或文件的绝对地址',
         default: path.resolve(process.cwd(), 'word'),
       })
+      .option('title',{
+        alias: 'l',
+        describe: '设置页面Title',
+        default: 'word2html生成的静态页面',
+      })
       .alias('h', 'help')
   }, (argv) => {
       if(!argv.l){
