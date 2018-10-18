@@ -19,17 +19,17 @@ const bigTip = figlet.textSync('word2html', {
 console.log(chalk.green(bigTip));
 
 let argv = yargs
-  .command('convert [local] [options]', '将word目录中的word文档转换成html页面', (yargs) => {
+  .command('convert [options]', '将word目录中的word文档转换成html页面', (yargs) => {
     yargs
       .reset()
-      .usage(titleTip('Usage')+': $0 [local] [options]')
+      .usage(titleTip('Usage')+': $0 convert [options]')
       .option('local',{
         alias: 'l',
         describe: '本地文件夹或文件的绝对地址',
         default: path.resolve(process.cwd(), 'word'),
       })
       .option('title',{
-        alias: 'l',
+        alias: 'tit',
         describe: '设置页面Title',
         default: 'word2html生成的静态页面',
       })

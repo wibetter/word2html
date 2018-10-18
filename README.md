@@ -22,6 +22,8 @@ word2html -h
 ```bash
 # 运行word2html convert执行转换任务，默认转换当前项目word文件夹中的word文档。
 word2html convert
+# 设置页面title。
+word2html convert --title=wibetter的页面
 ```
 
 - **将指定目录中的word文档转换成html页面，并放置在html目录中**
