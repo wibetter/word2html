@@ -54,29 +54,40 @@ const convert = function (configs) {
       suceessTip(htmlDir + '目录文件已清空');
       // 创建html目录
       fs.mkdir(htmlDir, function(){
-
-        const wordFiles = glob.sync(path.resolve(configs.local, '**/*.docx'));
-        if (wordFiles.length == 0) {
-          console.log(chalk.yellow('warn: ' + configs.local + '中没有找到word文档。'));
-        }
-        wordFiles.forEach(item => {
-          const one = path.parse(item);
-          const fileDir = one.dir;
-          let fileRemote;
-          if (configs.local.replace(fileDir, '') == '/' ||
-            fileDir.replace(configs.local, '') == '/') {
-            fileRemote = '';
-          } else {
-            fileRemote = fileDir.replace(configs.local, '');
-          }
+        if (configs.local.indexOf('.docx') >= 0) {
+          const one = path.parse(configs.local);
           const fileName = one.name;
-          mammoth.convertToHtml({path: item })
+          mammoth.convertToHtml({path: configs.local })
             .then(function(result){
-              var htmlDocument = result.value; // The generated HTML
-              createHtml(htmlDocument, fileName, fileRemote, configs);
+              const htmlDocument = result.value; // The generated HTML
+              // fileRemote直接设置为''，表示直接放在dist目录中
+              createHtml(htmlDocument, fileName, '', configs);
             })
             .done();
-        });
+        } else {
+          const wordFiles = glob.sync(path.resolve(configs.local, '**/*.docx'));
+          if (wordFiles.length == 0) {
+            console.log(chalk.yellow('warn: ' + configs.local + '中没有找到word文档。'));
+          }
+          wordFiles.forEach(item => {
+            const one = path.parse(item);
+            const fileDir = one.dir;
+            let fileRemote;
+            if (configs.local.replace(fileDir, '') == '/' ||
+              fileDir.replace(configs.local, '') == '/') {
+              fileRemote = '';
+            } else {
+              fileRemote = fileDir.replace(configs.local, '');
+            }
+            const fileName = one.name;
+            mammoth.convertToHtml({path: item })
+              .then(function(result){
+                var htmlDocument = result.value; // The generated HTML
+                createHtml(htmlDocument, fileName, fileRemote, configs);
+              })
+              .done();
+          });
+        }
       });
     })
     .catch(new Function());
