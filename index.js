@@ -33,6 +33,11 @@ let argv = yargs
         describe: '存放html的文件夹绝对地址',
         default: path.resolve(process.cwd(), 'html'),
       })
+      .option('template',{
+        alias: 'tpl',
+        describe: 'HTML模板页的绝对地址',
+        default: path.resolve(__dirname, 'template', 'common.html'),
+      })
       .option('title',{
         alias: 'tit',
         describe: '设置页面Title',

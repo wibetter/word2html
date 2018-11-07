@@ -27,7 +27,8 @@ const createHtml = function (document, fileName, fileRemote, config) {
   let filePath = path.resolve(newFileDir, fileName + '.html');
   filePath = filePath.replace(/\\/g, '/');
 
-  const htmlTemplatePath = path.resolve(__dirname, 'template', 'common.html');
+  const htmlTemplatePath = config.template ? config.template : path.resolve(__dirname, 'template', 'common.html');
+
   fs.readFile(htmlTemplatePath, 'utf8', function(err, htmlTemplate){
 
     let newDocument = htmlTemplate.replace(/#bodyDocument/g, document)
@@ -45,52 +46,40 @@ const createHtml = function (document, fileName, fileRemote, config) {
 
 const convert = function (configs) {
   if (configs.local) {
-    console.log("先清空html文件夹。。。");
-
-    const htmlDir = configs.dist;
-    del([htmlDir], {
-      force: true
-    }).then(() => {
-      suceessTip(htmlDir + '目录文件已清空');
-      // 创建html目录
-      fs.mkdir(htmlDir, function(){
-        if (configs.local.indexOf('.docx') >= 0) {
-          const one = path.parse(configs.local);
-          const fileName = one.name;
-          mammoth.convertToHtml({path: configs.local })
-            .then(function(result){
-              const htmlDocument = result.value; // The generated HTML
-              // fileRemote直接设置为''，表示直接放在dist目录中
-              createHtml(htmlDocument, fileName, '', configs);
-            })
-            .done();
+    if (configs.local.indexOf('.docx') >= 0) { // 判断local是否是单个word文件
+      const one = path.parse(configs.local);
+      const fileName = one.name;
+      mammoth.convertToHtml({path: configs.local })
+        .then(function(result){
+          const htmlDocument = result.value;
+          // fileRemote直接设置为''，表示直接放在dist目录中
+          createHtml(htmlDocument, fileName, '', configs);
+        })
+        .done();
+    } else {
+      const wordFiles = glob.sync(path.resolve(configs.local, '**/*.docx'));
+      if (wordFiles.length == 0) {
+        console.log(chalk.yellow('warn: ' + configs.local + '中没有找到word文档。'));
+      }
+      wordFiles.forEach(item => {
+        const one = path.parse(item);
+        const fileDir = one.dir;
+        let fileRemote;
+        if (configs.local.replace(fileDir, '') == '/' ||
+          fileDir.replace(configs.local, '') == '/') {
+          fileRemote = '';
         } else {
-          const wordFiles = glob.sync(path.resolve(configs.local, '**/*.docx'));
-          if (wordFiles.length == 0) {
-            console.log(chalk.yellow('warn: ' + configs.local + '中没有找到word文档。'));
-          }
-          wordFiles.forEach(item => {
-            const one = path.parse(item);
-            const fileDir = one.dir;
-            let fileRemote;
-            if (configs.local.replace(fileDir, '') == '/' ||
-              fileDir.replace(configs.local, '') == '/') {
-              fileRemote = '';
-            } else {
-              fileRemote = fileDir.replace(configs.local, '');
-            }
-            const fileName = one.name;
-            mammoth.convertToHtml({path: item })
-              .then(function(result){
-                var htmlDocument = result.value; // The generated HTML
-                createHtml(htmlDocument, fileName, fileRemote, configs);
-              })
-              .done();
-          });
+          fileRemote = fileDir.replace(configs.local, '');
         }
+        const fileName = one.name;
+        mammoth.convertToHtml({path: item })
+          .then(function(result){
+            var htmlDocument = result.value;
+            createHtml(htmlDocument, fileName, fileRemote, configs);
+          })
+          .done();
       });
-    })
-    .catch(new Function());
+    }
   }
 };
 
@@ -99,6 +88,16 @@ module.exports = function (configs) {
   // pc 斜杆处理
   configs.local = configs.local.replace(/\\/g, '/');
   configs.dist = configs.dist.replace(/\\/g, '/');
+  configs.template = configs.template.replace(/\\/g, '/');
 
-  convert(configs);
+  const htmlDir = configs.dist;
+  fs.exists(htmlDir, function(exist) {
+    if (!exist) {
+      fs.mkdir(htmlDir, function(){
+        convert(configs);
+      });
+    } else if (exist) {
+      convert(configs);
+    }
+  })
 }
