@@ -4,7 +4,7 @@ const path = require('path');
 module.exports = function (wordPath, option, distDir, template) { // option:{ htmlTitle,distDir,template}
   let configs = {
     local: path.resolve(process.cwd(), 'word'),
-    dist: path.resolve(process.cwd(), 'html'),
+    dist: path.resolve(process.cwd(), 'dist'),
     template: path.resolve(__dirname, 'template', 'common.html'),
     title: 'word2html生成的静态页面'
   };

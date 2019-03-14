@@ -31,7 +31,7 @@ let argv = yargs
       .option('dist',{
         alias: 'd',
         describe: '存放html的文件夹绝对地址',
-        default: path.resolve(process.cwd(), 'html'),
+        default: path.resolve(process.cwd(), 'dist'),
       })
       .option('template',{
         alias: 'tpl',
