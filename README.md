@@ -1,5 +1,4 @@
 
-
 # word2html: word文档转html工具
 ### 注：只处理后缀为'.docx'的word文档。
 
@@ -9,7 +8,7 @@
 
 ```bash
 #全局安装
-npm i -g git+ssh://git@github.com:wibetter/word2html.git
+npm i -g @wibetter/word2html
 ```
 
 - **查看帮助**
@@ -46,7 +45,7 @@ word2html convert --local=D:\sinaweb\word2html\word --dist=D:\mywork\word2html\h
 
 ```bash
 #安装
-npm i git+ssh://git@github.com:wibetter/word2html.git --save-dev
+npm i @wibetter/word2html --save-dev
 ```
 - **示例**
 
@@ -71,7 +70,7 @@ word2html('D:/sinaweb/word2html/word', 'wibetter', 'D:/mywork/word2html/html');
 
 ```bash
 #安装
-npm i git+ssh://git@github.com:wibetter/word2html.git --save-dev
+npm i @wibetter/word2html --save-dev
 ```
 - **示例**
 

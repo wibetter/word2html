@@ -1,6 +1,6 @@
 {
-  "name": "word2html",
-  "version": "1.0.0",
+  "name": "@wibetter/word2html",
+  "version": "1.0.1",
   "description": "word文档转html工具",
   "main": "main.js",
   "bin": {
